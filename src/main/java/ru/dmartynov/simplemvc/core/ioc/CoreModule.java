@@ -8,6 +8,7 @@ import ru.dmartynov.simplemvc.core.annotations.After;
 import ru.dmartynov.simplemvc.core.annotations.Before;
 import ru.dmartynov.simplemvc.core.annotations.With;
 import ru.dmartynov.simplemvc.core.interceptors.AfterBeforeInterceptor;
+import ru.dmartynov.simplemvc.core.interceptors.RedirectInterceptor;
 import ru.dmartynov.simplemvc.core.interceptors.WithInterceptor;
 import ru.dmartynov.simplemvc.core.mvc.Controller;
 import spark.Request;
@@ -47,6 +48,12 @@ public class CoreModule extends AbstractModule {
 
         bind(Request.class).toInstance(request);
         bind(Response.class).toInstance(response);
+
+        bindInterceptor(Matchers.subclassesOf(Controller.class),
+                getMatchers(),
+                new RedirectInterceptor(response)
+        );
+
     }
 
     private Matcher<Method> getMatchers() {
